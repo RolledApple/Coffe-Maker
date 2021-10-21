@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core"
+import { AfterViewInit, Component, OnInit } from "@angular/core"
 import { FormControl } from "@angular/forms"
 import { OrdersDataSource } from "../services/orders.datasouce"
 import { OrdersService } from "../services/orders.service"
@@ -45,6 +45,6 @@ export class StatsComponent implements OnInit {
   }
 
   loadOrders() {
-    this.dataSource.loadOrders(this.month.value)
+    this.dataSource.loadOrders(this.month.value.id)
   }
 }
