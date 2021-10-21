@@ -1,0 +1,42 @@
+<section class="main-section">
+  <div class="main-container">
+    <div class="container">
+      <div>
+      <span>
+        <mat-checkbox [(ngModel)]="isBoss" color="primary">
+          Are you a Boss?
+        </mat-checkbox>
+      </span>
+      </div>
+      <div>
+        Order coffee in
+        <input
+          class="waiting-input"
+          matInput
+          type="number"
+          placeholder="Minutes"
+          [(ngModel)]="waitingTime"
+        >
+        minutes
+      </div>
+      <div>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="order()"
+        >
+          Order coffee
+        </button>
+      </div>
+    </div>
+    <div class="redirect-button">
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="goToStatsPage()"
+      >
+        Accent
+      </button>
+    </div>
+  </div>
+</section>

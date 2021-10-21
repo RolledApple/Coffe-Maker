@@ -1,0 +1,24 @@
+.main-section {
+  margin: 200px 200px 200px 200px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.main-container {
+  width: 600px;
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
+}
+
+.waiting-input {
+  width: 35px
+}
+
+.redirect-button {
+  margin: auto
+}

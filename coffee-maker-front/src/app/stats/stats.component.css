@@ -1,0 +1,13 @@
+table {
+  width: 100%;
+}
+
+.main-section {
+  margin: 120px 120px 120px 120px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

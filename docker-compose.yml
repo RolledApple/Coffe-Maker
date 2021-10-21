@@ -1,0 +1,96 @@
+version: '3.7'
+
+services:
+
+  front:
+    build:
+      context: coffee-maker-front
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 4000:80
+
+  server:
+    image: node:14
+    working_dir: /coffee-maker-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./coffee-maker-gateway:/coffee-maker-gateway
+    command: bash -c "npm i && npm run start:dev"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - worker
+
+  worker:
+    image: node:14
+    working_dir: /coffee-maker-engine
+    volumes:
+      - ./coffee-maker-engine:/coffee-maker-engine
+    command: bash -c "npm i && npm run start:dev"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - redis
+
+  cli:
+    build:
+      context: ./cli
+    tty: true
+    working_dir: /coffee-maker-gateway
+    volumes:
+      - ./coffee-maker-gateway:/coffee-maker-gateway
+      - ./coffee-maker-engine:/coffee-maker-engine
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+  redis:
+    image: redis
+    expose:
+      - 6379
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    restart: unless-stopped
+
+
+volumes:
+  postgres:
+  pgadmin:
